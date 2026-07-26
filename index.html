@@ -1,104 +1,185 @@
-<html lang="en"><script src="./scripts/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script><script src="./scripts/extend-native-history-api.js"></script><script src="./scripts/requests.js"></script><head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="/top.png">
-    <link href="/css2" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PremoMax</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script type="module" crossorigin="" src="./scripts/index-374a0185.js"></script>
-    <link rel="stylesheet" href="./styles/index-2e725551.css">
-  <style type="text/css">.rfm-marquee-container {
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  width: var(--width);
-  transform: var(--transform);
-}
-.rfm-marquee-container:hover div {
-  animation-play-state: var(--pause-on-hover);
-}
-.rfm-marquee-container:active div {
-  animation-play-state: var(--pause-on-click);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premomax App</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary-orange: #d97706;
+      --bg-light: #fcfbf7;
+      --card-bg: #ffffff;
+      --text-dark: #1e293b;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-light); margin: 0; padding: 0; color: var(--text-dark); }
+    .card { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 15px; border: 1px solid #f1f1f1; }
+    .btn-orange { background: var(--primary-orange); color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+    .btn-orange:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .input-field { width: 100%; padding: 12px 14px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; background: #f8fafc; font-size: 14px; outline: none; }
+    .input-field:focus { border-color: var(--primary-orange); }
+    
+    /* Bottom Navigation */
+    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 420px; left: 50%; transform: translateX(-50%); background: #ffffff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #f1f5f9; box-shadow: 0 -4px 20px rgba(0,0,0,0.03); border-radius: 20px 20px 0 0; }
+    .nav-item { text-align: center; color: #94a3b8; font-size: 11px; cursor: pointer; flex: 1; font-weight: 500; }
+    .nav-item.active { color: var(--primary-orange); font-weight: bold; }
+    .icon { font-size: 18px; display: block; margin-bottom: 2px; }
 
-.rfm-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-.rfm-overlay::before, .rfm-overlay::after {
-  background: linear-gradient(to right, var(--gradient-color), rgba(255, 255, 255, 0));
-  content: "";
-  height: 100%;
-  position: absolute;
-  width: var(--gradient-width);
-  z-index: 2;
-  pointer-events: none;
-  touch-action: none;
-}
-.rfm-overlay::after {
-  right: 0;
-  top: 0;
-  transform: rotateZ(180deg);
-}
-.rfm-overlay::before {
-  left: 0;
-  top: 0;
-}
+    /* Loading Spinner */
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-orange); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
 
-.rfm-marquee {
-  flex: 0 0 auto;
-  min-width: var(--min-width);
-  z-index: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  animation: scroll var(--duration) linear var(--delay) var(--iteration-count);
-  animation-play-state: var(--play);
-  animation-delay: var(--delay);
-  animation-direction: var(--direction);
-}
-@keyframes scroll {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-.rfm-initial-child-container {
-  flex: 0 0 auto;
-  display: flex;
-  min-width: auto;
-  flex-direction: row;
-  align-items: center;
-}
-
-.rfm-child {
-  transform: var(--transform);
-}</style></head>
-  <body style="overflow: unset;" __processed_72141157-dad7-4d5b-abc9-eef96794bcf2__="true">
-<div style="background: #1e1e2d; color: #fff; padding: 20px; border-radius: 8px; max-width: 400px; margin: 20px auto; font-family: sans-serif; position: relative; z-index: 9999;">
-  <h3>Manual Deposit (EasyPaisa / JazzCash / Bank)</h3>
-  
-  <div style="background: #2b2b40; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
-    <p style="margin: 5px 0;"><strong>Bank / Wallet:</strong> EasyPaisa / JazzCash</p>
-    <p style="margin: 5px 0;"><strong>Account Name:</strong> آپ کا نام</p>
-    <p style="margin: 5px 0;"><strong>Account No:</strong> 03001234567</p>
+  <!-- 1. LOGIN / SIGNUP SCREEN (تصویر 1 جیسا) -->
+  <div id="authScreen" style="max-width: 360px; margin: 60px auto; text-align: center; padding: 0 20px;">
+    <div style="background: #0f172a; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; color: white;">🔒</div>
+    <h2 style="margin:0; font-size: 22px;">Welcome back</h2>
+    <p style="color: #64748b; font-size: 13px; margin-bottom: 25px;">Sign in to continue</p>
+    
+    <div class="card" style="text-align: left;">
+      <label style="font-size: 11px; font-weight: bold; color: #64748b; display:block; margin-bottom:5px;">EMAIL</label>
+      <input type="email" id="authEmail" class="input-field" placeholder="Enter your email">
+      
+      <label style="font-size: 11px; font-weight: bold; color: #64748b; display:block; margin-bottom:5px;">PASSWORD</label>
+      <input type="password" id="authPassword" class="input-field" placeholder="••••••••">
+      
+      <button id="btnLogin" class="btn-orange" style="background: #94a3b8; margin-top: 10px;">Sign in &rarr;</button>
+    </div>
+    <p style="font-size: 13px; color: #64748b;">Don't have an account? <a href="#" id="btnToggleAuth" style="color: #0f172a; font-weight: bold; text-decoration: none;">Sign up</a></p>
+    <p id="authMsg" style="color: #ef4444; font-size: 13px;"></p>
   </div>
 
-  <form id="depositForm">
-    <input type="email" id="userEmail" placeholder="آپ کا ای میل" required style="width: 100%; margin-bottom: 10px; padding: 10px; box-sizing: border-box;">
-    <input type="number" id="depositAmount" placeholder="رقم (Amount in PKR)" required style="width: 100%; margin-bottom: 10px; padding: 10px; box-sizing: border-box;">
-    <input type="text" id="trxId" placeholder="Transaction ID (Trx ID)" required style="width: 100%; margin-bottom: 10px; padding: 10px; box-sizing: border-box;">
-    <button type="submit" style="width: 100%; background: #00c853; color: white; padding: 12px; border: none; font-weight: bold; cursor: pointer;">ڈپازٹ کی درخواست بھیجیں</button>
-  </form>
-  <p id="responseMsg" style="margin-top: 10px; font-weight: bold;"></p>
-</div>
-    <div id="root"><div class="min-h-screen bg-white pb-24"><div class="fixed inset-0 bg-gradient-to-b from-amber-50/50 via-white to-white pointer-events-none"></div><div class="relative max-w-md mx-auto px-3 pt-3"><div style="opacity: 1; transform: none;"><div class="relative to-white rounded-2xl p-4 border border-amber-200/50 shadow-sm shadow-amber-100 overflow-hidden"><div class="relative z-10"><div class="flex items-center justify-between mb-4"><div class="flex items-center gap-2.5"><div class="w-9 h-9 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 overflow-hidden flex items-center justify-center ring-2 ring-amber-50 shadow-sm border border-amber-200/50"><img src="./images/profilePicture-1745400017847.webp" alt="" class="w-full h-full object-cover" style="display: none;"></div><div><p class="text-sm font-bold text-amber-950 leading-tight">Hamza Awan</p></div></div><button class="relative p-2 bg-amber-50/80 hover:bg-amber-100/80 backdrop-blur-sm rounded-full transition-colors shadow-sm border border-amber-200/50"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell text-amber-700" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0" /><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /></svg></button></div><div class="text-center mb-4"><div class="inline-flex items-center gap-1.5 px-3 py-1 backdrop-blur-sm rounded-full mb-2 border border-amber-200/50"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet text-amber-600" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg><span class="text-[13px] font-bold text-amber-700 uppercase tracking-wider">Available Balance</span></div><h2 class="text-3xl font-bold bg-gradient-to-r from-amber-900 via-amber-700 to-amber-900 bg-clip-text text-transparent tracking-tight">$0.059</h2></div><div class="flex items-center justify-between py-3 border-t border-amber-200/40 backdrop-blur-sm"><div class="flex items-center gap-2"><div class="w-8 h-8 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg flex items-center justify-center shadow-sm border border-amber-200/50"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-crown text-amber-700" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" /><path d="M5 21h14" /></svg></div><div><p class="text-[13px] font-semibold text-amber-600/80 uppercase tracking-wider">Level</p><p class="text-xl text-center font-bold uppercase tracking-wide">0</p></div></div><div class="h-8 w-px bg-gradient-to-b from-transparent via-amber-300/50 to-transparent"></div><div class="flex items-center gap-2 text-right"><div><p class="text-[13px] font-semibold text-amber-600/80 uppercase tracking-wider">Withdrawn</p><p class="text-xl font-bold text-amber-950">$0.585</p></div><div class="w-8 h-8 bg-gradient-to-br from-emerald-100 to-teal-50 rounded-lg flex items-center justify-center shadow-sm border border-emerald-200/30"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet-minimal text-emerald-700" aria-hidden="true"><path d="M17 14h.01" /><path d="M7 7h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14" /></svg></div></div></div><button class="w-full mt-3 py-2.5 bg-gradient-to-r from-amber-600 via-orange-500 to-amber-600 hover:from-amber-700 hover:via-orange-600 hover:to-amber-700 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all shadow-lg shadow-amber-200/50 border border-amber-700/20">Withdraw Funds<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></button></div></div></div><div class="mt-3 bg-gradient-to-r from-amber-100/80 to-orange-100/80 rounded-xl py-2.5 px-1 overflow-hidden" style="opacity: 1;"><div class="rfm-marquee-container" style="--pause-on-hover: paused; --pause-on-click: paused; --width: 100%; --transform: none;"><div class="rfm-marquee" style="--play: running; --direction: normal; --duration: 45.86785714285714s; --delay: 0s; --iteration-count: infinite; --min-width: 100%;"><div class="rfm-initial-child-container"><div class="rfm-child" style="--transform: none;"><span class="mx-4 m font-medium text-amber-800 flex items-center gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles w-3.5 h-3.5" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /><path d="M20 2v4" /><path d="M22 4h-4" /><circle cx="4" cy="20" r="2" /></svg> your earning potential and take charge of your future with this platform -where effort meets opportunity, and today’s hustle becomes tomorrow’s success.</span></div><div class="rfm-child" style="--transform: none;"><span class="mx-2 text-amber-300">•</span></div><div class="rfm-child" style="--transform: none;"><span class="mx-4 font-medium text-amber-800">Invite friends to earn rewards daily</span></div><div class="rfm-child" style="--transform: none;"><span class="mx-2 text-amber-300">•</span></div></div></div><div class="rfm-marquee" style="--play: running; --direction: normal; --duration: 45.86785714285714s; --delay: 0s; --iteration-count: infinite; --min-width: 100%;"><div class="rfm-child" style="--transform: none;"><span class="mx-4 m font-medium text-amber-800 flex items-center gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles w-3.5 h-3.5" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /><path d="M20 2v4" /><path d="M22 4h-4" /><circle cx="4" cy="20" r="2" /></svg> your earning potential and take charge of your future with this platform -where effort meets opportunity, and today’s hustle becomes tomorrow’s success.</span></div><div class="rfm-child" style="--transform: none;"><span class="mx-2 text-amber-300">•</span></div><div class="rfm-child" style="--transform: none;"><span class="mx-4 font-medium text-amber-800">Invite friends to earn rewards daily</span></div><div class="rfm-child" style="--transform: none;"><span class="mx-2 text-amber-300">•</span></div></div></div></div><div class="mt-3" style="opacity: 1; transform: none;"><h2 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">Quick Actions<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right w-4 h-4 text-slate-400" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg></h2><div class="grid grid-cols-4 gap-2.5"><button class="group flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white border border-amber-100 hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50 transition-all duration-200" tabindex="0"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column w-4.5 h-4.5 text-amber-700" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg></div><span class="text-[12px] font-medium text-amber-800 group-hover:text-amber-900 transition-colors leading-tight">Tasks</span></button><button class="group flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white border border-amber-100 hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50 transition-all duration-200" tabindex="0"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet w-4.5 h-4.5 text-amber-700" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg></div><span class="text-[12px] font-medium text-amber-800 group-hover:text-amber-900 transition-colors leading-tight">Wallet</span></button><button class="group flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white border border-amber-100 hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50 transition-all duration-200" tabindex="0" style="transform: none;"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift w-4.5 h-4.5 text-amber-700" aria-hidden="true"><path d="M12 7v14" /><path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" /><path d="M7.5 7a1 1 0 0 1 0-5A4.8 8 0 0 1 12 7a4.8 8 0 0 1 4.5-5 1 1 0 0 1 0 5" /><rect x="3" y="7" width="18" height="4" rx="1" /></svg></div><span class="text-[12px] font-medium text-amber-800 group-hover:text-amber-900 transition-colors leading-tight">Rewards</span></button><button class="group flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white border border-amber-100 hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50 transition-all duration-200" tabindex="0"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up w-4.5 h-4.5 text-amber-700" aria-hidden="true"><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></svg></div><span class="text-[12px] font-medium text-amber-800 group-hover:text-amber-900 transition-colors leading-tight">Salary</span></button><button class="group flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white border border-amber-100 hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50 transition-all duration-200" tabindex="0"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-4.5 h-4.5 text-amber-700" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><path d="M16 3.128a4 4 0 0 1 0 7.744" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><circle cx="9" cy="7" r="4" /></svg></div><span class="text-[12px] font-medium text-amber-800 group-hover:text-amber-900 transition-colors leading-tight">Team</span></button><button class="group flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white border border-amber-100 hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50 transition-all duration-200" tabindex="0" style="transform: translateY(0.0283295px);"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trophy w-4.5 h-4.5 text-amber-700" aria-hidden="true"><path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978" /><path d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978" /><path d="M18 9h1.5a1 1 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z" /><path d="M6 9H4.5a1 1 0 0 1 0-5H6" /></svg></div><span class="text-[12px] font-medium text-amber-800 group-hover:text-amber-900 transition-colors leading-tight">Levels</span></button><button class="group flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white border border-amber-100 hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50 transition-all duration-200" tabindex="0"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe w-4.5 h-4.5 text-amber-700" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg></div><span class="text-[12px] font-medium text-amber-800 group-hover:text-amber-900 transition-colors leading-tight">Support</span></button><button class="group flex flex-col items-center gap-2 p-2.5 rounded-xl bg-white border border-amber-100 hover:border-amber-300 hover:shadow-md hover:shadow-amber-100/50 transition-all duration-200" tabindex="0"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings w-4.5 h-4.5 text-amber-700" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /><circle cx="12" cy="12" r="3" /></svg></div><span class="text-[12px] font-medium text-amber-800 group-hover:text-amber-900 transition-colors leading-tight">Settings</span></button></div></div><div class="mt-4" style="opacity: 1; transform: none;"><button class="w-full group relative overflow-hidden rounded-2xl bg-white p-4 border-2 border-amber-300/60 shadow-sm hover:shadow-md hover:shadow-amber-200/30 transition-all duration-200" tabindex="0" style="transform: none;"><div class="flex items-center justify-between"><div class="flex items-center gap-3"><div class="p-2.5 bg-amber-100 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-plus w-5 h-5 text-amber-700" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><line x1="19" x2="19" y1="8" y2="14" /><line x1="22" x2="16" y1="11" y2="11" /></svg></div><div class="text-left"><h3 class="font-semibold text-sm text-amber-800">Invite Friends</h3><p class="text-[11px] text-amber-600">Rewards | Salary | Commission</p></div></div><button class="p-2 bg-amber-100 hover:bg-amber-200 rounded-xl transition-colors" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy w-4 h-4 text-amber-700" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg></button></div></button></div><div class="mt-3" style="opacity: 1; transform: none;"><div class="rounded-2xl overflow-hidden shadow-lg shadow-slate-200/50"><div class="slider-wrapper relative mx-auto overflow-hidden" style="box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px; border-radius: 18px; max-width: 600px;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" class="absolute z-10 cursor-pointer left-2 top-1/2 transform -translate-y-1/2 text-white" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M752.145 0c8.685 0 17.572 3.434 24.237 10.099 13.33 13.33 13.33 35.143 0 48.473L320.126 515.03l449.591 449.591c13.33 13.33 13.33 35.144 0 48.474-13.33 13.33-35.142 13.33-48.472 0L247.418 539.268c-13.33-13.33-13.33-35.144 0-48.474L727.91 10.1C734.575 3.435 743.46.002 752.146.002z" /></svg><div class="flex transition-transform duration-700 ease-in-out" style="height: 161px; width: 400%; transform: translateX(-25%);"><div class="flex items-center justify-center relative" style="width: 25%; background-color: rgb(240, 240, 240);"><img src="./images/1771610187767-409129959.jpg" alt="Slide 1" loading="lazy" class="object-cover object-center w-full h-full" style="display: none;"></div><div class="flex items-center justify-center relative" style="width: 25%; background-color: rgb(240, 240, 240);"><img src="./images/1771610070169-648347313.jpg" alt="Slide 2" loading="lazy" class="object-cover object-center w-full h-full" style="display: none;"></div><div class="flex items-center justify-center relative" style="width: 25%; background-color: rgb(240, 240, 240);"><img src="./images/1771608737789-513168219.jpg" alt="Slide 3" loading="lazy" class="object-cover object-center w-full h-full" style="display: none;"></div><div class="flex items-center justify-center relative" style="width: 25%; background-color: rgb(240, 240, 240);"><img src="./images/1770775890120-533742967.jpeg" alt="Slide 4" loading="lazy" class="object-cover object-center w-full h-full" style="display: none;"></div></div><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-white cursor-pointer" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M271.653 1023.192c-8.685 0-17.573-3.432-24.238-10.097-13.33-13.33-13.33-35.144 0-48.474L703.67 508.163 254.08 58.573c-13.33-13.331-13.33-35.145 0-48.475 13.33-13.33 35.143-13.33 48.473 0L776.38 483.925c13.33 13.33 13.33 35.143 0 48.473l-480.492 480.694c-6.665 6.665-15.551 10.099-24.236 10.099z" /></svg></div></div></div></div><div class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-50"><div class="bg-white/95 backdrop-blur-xl border border-amber-200/50 shadow-lg shadow-amber-200/30 rounded-2xl px-2 py-2" style="height: 56px;"><div class="flex items-center justify-between h-full"><button class="relative flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 active:scale-95 bg-amber-100 text-amber-700"><span class="absolute -top-1 w-1 h-1 rounded-full bg-current opacity-50"></span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house mb-0.5" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg><span class="text-[12px] font-semibold tracking-tight">Home</span></button><button class="relative flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 active:scale-95 text-amber-700/50 hover:text-orange-600 hover:bg-orange-50/50"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column mb-0.5" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg><span class="text-[12px] font-semibold tracking-tight">Stats</span></button><button class="relative flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 active:scale-95 text-amber-700/50 hover:text-amber-600 hover:bg-yellow-50/50"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet mb-0.5" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg><span class="text-[12px] font-semibold tracking-tight">Wallet</span></button><button class="relative flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 active:scale-95 text-amber-700/50 hover:text-amber-600 hover:bg-amber-50/50"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user mb-0.5" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg><span class="text-[12px] font-semibold tracking-tight">Profile</span></button><button class="relative flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 active:scale-95 text-amber-700/50 hover:text-rose-500 hover:bg-rose-50/50"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out mb-0.5" aria-hidden="true"><path d="m16 17 5-5-5-5" /><path d="M21 12H9" /><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /></svg><span class="text-[12px] font-semibold tracking-tight">Exit</span></button></div></div></div></div></div>
-    
-  
+  <!-- 2. SADAPAY DEPOSIT SCREEN (3 Input Fields Only) -->
+  <div id="depositScreen" style="max-width: 380px; margin: 40px auto; padding: 0 15px; display: none;">
+    <div class="card">
+      <h3 style="margin-top:0; color:var(--text-dark); text-align:center;">SadaPay Deposit</h3>
+      <div style="background: #fff7ed; border: 1px solid #ffedd5; padding: 12px; border-radius: 12px; margin-bottom: 15px; font-size: 13px; color: #9a3412;">
+        <p style="margin:2px 0;"><strong>Bank:</strong> SadaPay</p>
+        <p style="margin:2px 0;"><strong>Official No:</strong> 03001234567</p>
+      </div>
 
-</body></html>
+      <!-- 3 INPUT BOXES -->
+      <label style="font-size: 11px; font-weight: bold; color: #64748b;">ACCOUNT HOLDER NAME</label>
+      <input type="text" id="depName" class="input-field" placeholder="Enter Account Holder Name" oninput="validateDepositForm()">
+
+      <label style="font-size: 11px; font-weight: bold; color: #64748b;">ACCOUNT NUMBER</label>
+      <input type="text" id="depNumber" class="input-field" placeholder="Enter Sender Account Number" oninput="validateDepositForm()">
+
+      <label style="font-size: 11px; font-weight: bold; color: #64748b;">TRANSACTION ID (TRX ID)</label>
+      <input type="text" id="depTrx" class="input-field" placeholder="Enter Transaction ID" oninput="validateDepositForm()">
+
+      <!-- PROCEED BUTTON (Initially Disabled) -->
+      <button id="btnProceed" class="btn-orange" disabled onclick="submitDeposit()">Proceed &rarr;</button>
+    </div>
+  </div>
+
+  <!-- 3. PENDING APPROVAL SCREEN (With Loading Indicator) -->
+  <div id="pendingScreen" style="max-width: 380px; margin: 60px auto; text-align: center; padding: 0 15px; display: none;">
+    <div class="card" style="padding: 30px 20px;">
+      <div class="spinner"></div>
+      <h3 style="color: var(--primary-orange); margin-top: 10px;">Approval Pending</h3>
+      <p style="font-size: 14px; color: #475569; line-height: 1.5; margin-top: 10px;">
+        Approving by admin takes <strong>5 to 30 minutes</strong>.
+      </p>
+      <p style="font-size: 12px; color: #94a3b8; margin-top: 15px;">Your dashboard will unlock automatically once verified.</p>
+    </div>
+  </div>
+
+  <!-- 4. MAIN DASHBOARD (تصاوير 2, 3, 4, 5 والا فلو) -->
+  <div id="mainApp" style="max-width: 420px; margin: 0 auto; padding-bottom: 80px; display: none;">
+    
+    <!-- BALANCE CARD -->
+    <div class="card" style="margin: 15px; text-align: center; border-radius: 24px;">
+      <h3 id="userNameDisplay" style="margin:0 0 10px 0; font-size:18px;">Hamza Awan</h3>
+      <span style="background: #fff7ed; color: #c2410c; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 0.5px;">AVAILABLE BALANCE</span>
+      <h1 id="userBalance" style="font-size: 40px; margin: 10px 0; color: #c2410c; font-weight: 800;">$0.059</h1>
+      
+      <div style="display:flex; justify-content:space-around; margin: 15px 0 10px 0; font-size:13px; border-top:1px solid #f1f5f9; padding-top:10px;">
+        <div><span style="color:#94a3b8; font-size:11px; display:block;">LEVEL</span><strong>0</strong></div>
+        <div><span style="color:#94a3b8; font-size:11px; display:block;">WITHDRAWN</span><strong>$0.585</strong></div>
+      </div>
+      
+      <button class="btn-orange" onclick="switchTab('wallet')">Withdraw Funds &rarr;</button>
+    </div>
+
+    <!-- TAB 1: HOME -->
+    <div id="tabHome" class="tab-content" style="padding: 0 15px;">
+      <div class="card">
+        <h4 style="margin-top:0;">Quick Actions</h4>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <button class="btn-orange" style="background:#0284c7; font-size:13px;" onclick="switchTab('tasks')">📝 Daily Tasks</button>
+          <button class="btn-orange" style="background:#059669; font-size:13px;" onclick="switchTab('wallet')">👛 Wallet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: WORKING TASKS SECTION -->
+    <div id="tabTasks" class="tab-content" style="padding: 0 15px; display:none;">
+      <div class="card">
+        <h4 style="margin-top:0;">Copy & Paste Task</h4>
+        <p style="font-size:12px; color:#64748b;">Copy the 10 words below and paste them exactly into the box ($0.003 / Task).</p>
+        
+        <div style="background:#f8fafc; border:1px dashed #cbd5e1; padding:12px; border-radius:10px; font-weight:bold; letter-spacing:0.5px; margin-bottom:12px; font-size:13px; text-align:center; user-select:all;" id="taskWords">
+          Apple Banana Orange Grape Mango Lemon Peach Cherry Berry Melon
+        </div>
+        
+        <input type="text" id="taskInput" class="input-field" placeholder="Paste the 10 words here...">
+        <button id="btnSubmitTask" class="btn-orange" onclick="handleTaskSubmit()">Submit Task</button>
+        <p id="taskMsg" style="font-size:13px; font-weight:bold; margin-top:10px; text-align:center;"></p>
+      </div>
+    </div>
+
+    <!-- TAB 2: STATS -->
+    <div id="tabStats" class="tab-content" style="padding: 0 15px; display:none;">
+      <div class="card">
+        <h4 style="margin-top:0;">Analytics</h4>
+        <p style="font-size:14px;">Completed Tasks: <strong id="completedTasksCount">0</strong> / 3</p>
+        <p style="font-size:14px;">Today's Task Earnings: <strong id="taskEarnings">$0.000</strong></p>
+      </div>
+    </div>
+
+    <!-- TAB 3: WALLET -->
+    <div id="tabWallet" class="tab-content" style="padding: 0 15px; display:none;">
+      <div class="card">
+        <h4 style="margin-top:0;">Withdraw Funds</h4>
+        <label style="font-size: 11px; font-weight:bold; color:#64748b;">PAYMENT METHOD</label>
+        <select id="withdrawMethod" class="input-field" style="margin-top:4px;">
+          <option value="Easypaisa">Easypaisa</option>
+          <option value="Jazzcash">Jazzcash</option>
+          <option value="UPaisa">UPaisa</option>
+          <option value="SadaPay">SadaPay</option>
+        </select>
+        
+        <input type="text" id="withdrawAccount" class="input-field" placeholder="Account Number">
+        <input type="number" id="withdrawAmount" class="input-field" placeholder="Amount in USD ($)">
+        <button class="btn-orange" onclick="handleWithdraw()">Request Withdrawal</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: PROFILE -->
+    <div id="tabProfile" class="tab-content" style="padding: 0 15px; display:none;">
+      <div class="card">
+        <h4 style="margin-top:0;">Edit Profile</h4>
+        <label style="font-size:11px; font-weight:bold; color:#64748b;">FULL NAME</label>
+        <input type="text" id="profName" class="input-field" value="Hamza Awan">
+        <label style="font-size:11px; font-weight:bold; color:#64748b;">EMAIL</label>
+        <input type="email" id="profEmail" class="input-field" disabled>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="switchTab('home')"><span class="icon">🏠</span>Home</div>
+      <div class="nav-item" onclick="switchTab('stats')"><span class="icon">📊</span>Stats</div>
+      <div class="nav-item" onclick="switchTab('wallet')"><span class="icon">👛</span>Wallet</div>
+      <div class="nav-item" onclick="switchTab('profile')"><span class="icon">👤</span>Profile</div>
+      <div class="nav-item" onclick="logout()"><span class="icon">🚪</span>Exit</div>
+    </div>
+
+  </div>
+
+  <script src="scripts/index-374a0185.js"></script>
+</body>
+</html>
