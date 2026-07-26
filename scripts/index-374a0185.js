@@ -236,7 +236,7 @@ function handleTaskSubmit() {
   }
 }
 
-// WITHDRAW LOGIC
+// WITHDRAW LOGIC (With $0.50 Minimum Limit)
 function handleWithdraw() {
   const method = document.getElementById('withdrawMethod').value;
   const acc = document.getElementById('withdrawAccount').value;
@@ -244,6 +244,12 @@ function handleWithdraw() {
 
   if (!acc || isNaN(amount)) {
     alert("Please fill all withdrawal details.");
+    return;
+  }
+
+  // Minimum limit check
+  if (amount < 0.50) {
+    alert("Minimum withdrawal limit is $0.50!");
     return;
   }
 
