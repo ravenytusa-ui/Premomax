@@ -32,7 +32,7 @@
 </head>
 <body>
 
-<!-- 1. LOGIN / SIGNUP SCREEN -->
+  <!-- 1. LOGIN / SIGNUP SCREEN -->
   <div id="authScreen" style="max-width: 380px; margin: 40px auto; text-align: center; padding: 0 15px;">
     <div style="background: #0f172a; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; color: white;">🔒</div>
     <h2 id="authHeading" style="margin:0; font-size: 22px;">Welcome back</h2>
@@ -74,7 +74,7 @@
     <p id="authMsg" style="color: #ef4444; font-size: 13px; font-weight: bold; margin-top: 10px;"></p>
   </div>
 
-  <!-- 2. SADAPAY DEPOSIT SCREEN (3 Input Fields Only) -->
+  <!-- 2. SADAPAY DEPOSIT SCREEN -->
   <div id="depositScreen" style="max-width: 380px; margin: 40px auto; padding: 0 15px; display: none;">
     <div class="card">
       <h3 style="margin-top:0; color:var(--text-dark); text-align:center;">SadaPay Deposit</h3>
@@ -83,7 +83,6 @@
         <p style="margin:2px 0;"><strong>Official No:</strong> 03001234567</p>
       </div>
 
-      <!-- 3 INPUT BOXES -->
       <label style="font-size: 11px; font-weight: bold; color: #64748b;">ACCOUNT HOLDER NAME</label>
       <input type="text" id="depName" class="input-field" placeholder="Enter Account Holder Name" oninput="validateDepositForm()">
 
@@ -93,12 +92,11 @@
       <label style="font-size: 11px; font-weight: bold; color: #64748b;">TRANSACTION ID (TRX ID)</label>
       <input type="text" id="depTrx" class="input-field" placeholder="Enter Transaction ID" oninput="validateDepositForm()">
 
-      <!-- PROCEED BUTTON (Initially Disabled) -->
       <button id="btnProceed" class="btn-orange" disabled onclick="submitDeposit()">Proceed &rarr;</button>
     </div>
   </div>
 
-  <!-- 3. PENDING APPROVAL SCREEN (With Loading Indicator) -->
+  <!-- 3. PENDING APPROVAL SCREEN -->
   <div id="pendingScreen" style="max-width: 380px; margin: 60px auto; text-align: center; padding: 0 15px; display: none;">
     <div class="card" style="padding: 30px 20px;">
       <div class="spinner"></div>
@@ -110,7 +108,7 @@
     </div>
   </div>
 
-  <!-- 4. MAIN DASHBOARD (تصاوير 2, 3, 4, 5 والا فلو) -->
+  <!-- 4. MAIN DASHBOARD -->
   <div id="mainApp" style="max-width: 420px; margin: 0 auto; padding-bottom: 80px; display: none;">
     
     <!-- BALANCE CARD -->
@@ -135,17 +133,20 @@
           <button class="btn-orange" style="background:#0284c7; font-size:13px;" onclick="switchTab('tasks')">📝 Daily Tasks</button>
           <button class="btn-orange" style="background:#059669; font-size:13px;" onclick="switchTab('wallet')">👛 Wallet</button>
         </div>
-
-    <!-- INVITE FRIENDS BANNER (Ab yeh alag card ban kar yahan aayega) -->
-    <div class="card" style="background: #ffffff; border: 2px solid #fde047; border-radius: 20px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px;">
-      <div style="background: #fef08a; width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">👥</div>
-      <div style="flex-grow: 1; margin-left: 15px;">
-        <h4 style="margin: 0; color: #713f12; font-size: 16px;">Invite Friends</h4>
-        <p style="margin: 2px 0 0 0; color: #a16207; font-size: 12px;">Rewards | Salary | Commission</p>
-        <p style="margin: 4px 0 0 0; color: #15803d; font-size: 11px; font-weight: bold;" id="referralCountText">Referrals: 0 Members Added</p>
       </div>
-      <button onclick="copyReferralLink()" style="background: #fef08a; border: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;" title="Copy Referral Link">📋</button>
+
+      <!-- INVITE FRIENDS BANNER -->
+      <div class="card" style="background: #ffffff; border: 2px solid #fde047; border-radius: 20px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px;">
+        <div style="background: #fef08a; width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">👥</div>
+        <div style="flex-grow: 1; margin-left: 15px;">
+          <h4 style="margin: 0; color: #713f12; font-size: 16px;">Invite Friends</h4>
+          <p style="margin: 2px 0 0 0; color: #a16207; font-size: 12px;">Rewards | Salary | Commission</p>
+          <p style="margin: 4px 0 0 0; color: #15803d; font-size: 11px; font-weight: bold;" id="referralCountText">Referrals: 0 Members Added</p>
+        </div>
+        <button onclick="copyReferralLink()" style="background: #fef08a; border: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;" title="Copy Referral Link">📋</button>
+      </div>
     </div>
+
     <!-- TAB: WORKING TASKS SECTION -->
     <div id="tabTasks" class="tab-content" style="padding: 0 15px; display:none;">
       <div class="card">
