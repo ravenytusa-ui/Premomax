@@ -1,330 +1,216 @@
-const SUPABASE_URL = 'https://zwmgzepftzayzgvgwndp.supabase.co';
-const SUPABASE_KEY = `sb_publishable_RFdnWIB4bMs1zz4qkXcdZQ__JL7YmIf`;
-let supabaseClient = null;
-if (typeof supabase !== 'undefined') {
-  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
-
-let currentUser = null;
-let currentBalance = 0.059;
-let taskCount = 0;
-let isSignUpMode = false;
-
-document.addEventListener('DOMContentLoaded', async () => {
-  if (!supabaseClient) return;
-
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) {
-    currentUser = session.user;
-    checkStatus();
-  }
-
-  // Sign In / Sign Up Button
-  const btnLogin = document.getElementById('btnLogin');
-  if (btnLogin) btnLogin.addEventListener('click', handleAuth);
-
-  // Toggle Toggle Form Mode
-  const btnToggleAuth = document.getElementById('btnToggleAuth');
-  if (btnToggleAuth) {
-    btnToggleAuth.addEventListener('click', (e) => {
-      e.preventDefault();
-      isSignUpMode = !isSignUpMode;
-
-      const heading = document.getElementById('authHeading');
-      const subheading = document.getElementById('authSubheading');
-      const btn = document.getElementById('btnLogin');
-      const toggleText = document.getElementById('toggleText');
-      const toggleBtn = document.getElementById('btnToggleAuth');
-      const signupFields = document.getElementById('signupFields');
-      const retypeField = document.getElementById('retypePassField');
-      const msg = document.getElementById('authMsg');
-
-      msg.innerText = "";
-
-      if (isSignUpMode) {
-        heading.innerText = "Create Account";
-        subheading.innerText = "Fill in your details to get started";
-        btn.innerText = "Sign up →";
-        toggleText.innerText = "Already have an account?";
-        toggleBtn.innerText = "Sign in";
-        signupFields.style.display = "block";
-        retypeField.style.display = "block";
-      } else {
-        heading.innerText = "Welcome back";
-        subheading.innerText = "Sign in to continue";
-        btn.innerText = "Sign in →";
-        toggleText.innerText = "Don't have an account?";
-        toggleBtn.innerText = "Sign up";
-        signupFields.style.display = "none";
-        retypeField.style.display = "none";
-      }
-    });
-  }
-});
-
-// VALIDATE 3 DEPOSIT INPUT FIELDS
-function validateDepositForm() {
-  const name = document.getElementById('depName').value.trim();
-  const num = document.getElementById('depNumber').value.trim();
-  const trx = document.getElementById('depTrx').value.trim();
-  const btn = document.getElementById('btnProceed');
-
-  if (name !== "" && num !== "" && trx !== "") {
-    btn.disabled = false;
-  } else {
-    btn.disabled = true;
-  }
-}
-
-// SUBMIT DEPOSIT & SHOW PENDING
-async function submitDeposit() {
-  const name = document.getElementById('depName').value;
-  const num = document.getElementById('depNumber').value;
-  const trx = document.getElementById('depTrx').value;
-
-  const { error } = await supabaseClient
-    .from('deposits')
-    .insert([{ 
-      user_email: currentUser.email, 
-      account_name: name,
-      account_number: num,
-      trx_id: trx, 
-      status: 'Pending' 
-    }]);
-
-  if (!error) {
-    document.getElementById('depositScreen').style.display = 'none';
-    document.getElementById('pendingScreen').style.display = 'block';
-  } else {
-    alert("Error: " + error.message);
-  }
-}
-
-// AUTH HANDLER
-async function handleAuth() {
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value.trim();
-  const msg = document.getElementById('authMsg');
-
-  if (!email || !password) {
-    msg.innerText = "Please enter both email and password.";
-    return;
-  }
-
-  if (isSignUpMode) {
-    const fullName = document.getElementById('authName').value.trim();
-    const phone = document.getElementById('authPhone').value.trim();
-    const city = document.getElementById('authCity').value.trim();
-    const confirmPass = document.getElementById('authConfirmPassword').value.trim();
-
-    if (!fullName || !phone || !city) {
-      msg.innerText = "Please fill in all the details.";
-      return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premomax App</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary-orange: #d97706;
+      --bg-light: #fcfbf7;
+      --card-bg: #ffffff;
+      --text-dark: #1e293b;
     }
-
-    if (password !== confirmPass) {
-      msg.innerText = "Passwords do not match!";
-      return;
-    }
-
-    msg.style.color = "#d97706";
-    msg.innerText = "Creating account...";
-
-    // Sign Up user with additional metadata (Name, Phone, City)
-    const { data, error } = await supabaseClient.auth.signUp({ 
-      email, 
-      password,
-      options: {
-        data: {
-          full_name: fullName,
-          phone_number: phone,
-          city: city
-        }
-      }
-    });
-
-    if (error) {
-      msg.style.color = "#ef4444";
-      msg.innerText = error.message;
-    } else {
-      currentUser = data.user;
-      msg.style.color = "#10b981";
-      msg.innerText = "Account created successfully!";
-      checkStatus();
-    }
-
-  } else {
-    // SIGN IN LOGIC
-    msg.style.color = "#d97706";
-    msg.innerText = "Signing in...";
-
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if (error) {
-      msg.style.color = "#ef4444";
-      msg.innerText = error.message;
-    } else {
-      currentUser = data.user;
-      checkStatus();
-    }
-  }
-}
-
-// STATUS CHECK
-async function checkStatus() {
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('profEmail').value = currentUser.email;
-
-  if (currentUser.user_metadata && currentUser.user_metadata.full_name) {
-    document.getElementById('userNameDisplay').innerText = currentUser.user_metadata.full_name;
-    document.getElementById('profName').value = currentUser.user_metadata.full_name;
-  }
-
-  const { data: deposits } = await supabaseClient
-    .from('deposits')
-    .select('*')
-    .eq('user_email', currentUser.email);
-
-  if (!deposits || deposits.length === 0) {
-    document.getElementById('depositScreen').style.display = 'block';
-  } else {
-    const approved = deposits.some(d => d.status === 'Approved');
-    if (approved) {
-      document.getElementById('pendingScreen').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'block';
-      checkReferrals();
-
-    } else {
-      document.getElementById('pendingScreen').style.display = 'block';
-    }
- // COPY REFERRAL LINK FUNCTION (Fallback Method)
-function copyReferralLink() {
-  if (!currentUser) {
-    alert("Please login first!");
-    return;
-  }
-  
-  const refLink = window.location.origin + window.location.pathname + "?ref=" + encodeURIComponent(currentUser.email);
-  
-  // Temporary input element banatay hain taake copy 100% kaam kare
-  const tempInput = document.createElement("input");
-  tempInput.value = refLink;
-  document.body.appendChild(tempInput);
-  tempInput.select();
-  document.execCommand("copy");
-  document.body.removeChild(tempInput);
-  
-  alert("Referral link copied successfully!");
-}
-// CHECK REFERRAL COUNT
-async function checkReferrals() {
-  if (!currentUser) return;
-
-  const { data } = await supabaseClient
-    .from('referrals')
-    .select('*')
-    .eq('referrer_email', currentUser.email);
-
-  if (data) {
-    const count = data.length;
-    const refText = document.getElementById('referralCountText');
-    if (refText) {
-      refText.innerText = `Referrals: ${count} Member${count === 1 ? '' : 's'} Added`;
-    }
-  }
-}
-}
-
-// TAB NAVIGATION
-function switchTab(tabName) {
-  const tabs = ['tabHome', 'tabStats', 'tabWallet', 'tabProfile', 'tabTasks'];
-  tabs.forEach(t => {
-    const el = document.getElementById(t);
-    if (el) el.style.display = 'none';
-  });
-
-  const activeTab = document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
-  if (activeTab) activeTab.style.display = 'block';
-}
-
-// TASK LOGIC
-function handleTaskSubmit() {
-  const targetWords = "Apple Banana Orange Grape Mango Lemon Peach Cherry Berry Melon";
-  const input = document.getElementById('taskInput').value.trim();
-  const msg = document.getElementById('taskMsg');
-
-  if (taskCount >= 3) {
-    msg.innerText = "Daily task limit reached! (3/3 completed)";
-    msg.style.color = "#ef4444";
-    return;
-  }
-
-  if (input === targetWords) {
-    taskCount++;
-    currentBalance += 0.003;
-    document.getElementById('userBalance').innerText = "$" + currentBalance.toFixed(3);
-    document.getElementById('completedTasksCount').innerText = taskCount;
-    document.getElementById('taskEarnings').innerText = "$" + (taskCount * 0.003).toFixed(3);
-    document.getElementById('taskInput').value = "";
-    msg.innerText = `Task ${taskCount} complete! $0.003 added.`;
-    msg.style.color = "#10b981";
-  } else {
-    msg.innerText = "Words do not match! Please copy & paste exactly.";
-    msg.style.color = "#ef4444";
-  }
-}
-
-// WITHDRAW LOGIC (Saves to Supabase & Checks $0.50 Limit)
-async function handleWithdraw() {
-  const method = document.getElementById('withdrawMethod').value;
-  const acc = document.getElementById('withdrawAccount').value;
-  const amount = parseFloat(document.getElementById('withdrawAmount').value);
-
-  if (!acc || isNaN(amount)) {
-    alert("Please fill all withdrawal details.");
-    return;
-  }
-
-  // Minimum limit check ($0.50)
-  if (amount < 0.50) {
-    alert("Minimum withdrawal limit is $0.50!");
-    return;
-  }
-
-  if (amount > currentBalance) {
-    alert("Insufficient balance!");
-    return;
-  }
-
-  // Save withdrawal request to Supabase
-  const { error } = await supabaseClient
-    .from('withdrawals')
-    .insert([{
-      user_email: currentUser.email,
-      method: method,
-      account_number: acc,
-      amount: amount,
-      status: 'Pending'
-    }]);
-
-  if (error) {
-    alert("Error: " + error.message);
-  } else {
-    currentBalance -= amount;
-    document.getElementById('userBalance').innerText = "$" + currentBalance.toFixed(3);
-    alert(`Withdrawal request of $${amount} via ${method} submitted successfully!`);
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-light); margin: 0; padding: 0; color: var(--text-dark); }
+    .card { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 15px; border: 1px solid #f1f1f1; }
+    .btn-orange { background: var(--primary-orange); color: white; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+    .btn-orange:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .input-field { width: 100%; padding: 12px 14px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; background: #f8fafc; font-size: 14px; outline: none; }
+    .input-field:focus { border-color: var(--primary-orange); }
     
-    // Clear inputs
-    document.getElementById('withdrawAccount').value = "";
-    document.getElementById('withdrawAmount').value = "";
-  }
-}}
-  }
-}
-  }
-}
+    /* Bottom Navigation */
+    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 420px; left: 50%; transform: translateX(-50%); background: #ffffff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #f1f5f9; box-shadow: 0 -4px 20px rgba(0,0,0,0.03); border-radius: 20px 20px 0 0; }
+    .nav-item { text-align: center; color: #94a3b8; font-size: 11px; cursor: pointer; flex: 1; font-weight: 500; }
+    .nav-item.active { color: var(--primary-orange); font-weight: bold; }
+    .icon { font-size: 18px; display: block; margin-bottom: 2px; }
 
-// LOGOUT
-async function logout() {
-  await supabaseClient.auth.signOut();
-  window.location.reload();
-}
+    /* Loading Spinner */
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-orange); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- 1. LOGIN / SIGNUP SCREEN -->
+  <div id="authScreen" style="max-width: 380px; margin: 40px auto; text-align: center; padding: 0 15px;">
+    <div style="background: #0f172a; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; color: white;">🔒</div>
+    <h2 id="authHeading" style="margin:0; font-size: 22px;">Welcome back</h2>
+    <p id="authSubheading" style="color: #64748b; font-size: 13px; margin-bottom: 20px;">Sign in to continue</p>
+    
+    <div class="card" style="text-align: left; padding: 20px;">
+      
+      <!-- Signup Extra Fields (Visible only on Sign Up) -->
+      <div id="signupFields" style="display: none;">
+        <label style="font-size: 11px; font-weight: bold; color: #64748b; display:block; margin-bottom:4px;">FULL NAME</label>
+        <input type="text" id="authName" class="input-field" placeholder="Enter full name">
+
+        <label style="font-size: 11px; font-weight: bold; color: #64748b; display:block; margin-bottom:4px;">PHONE NUMBER</label>
+        <input type="tel" id="authPhone" class="input-field" placeholder="03001234567">
+
+        <label style="font-size: 11px; font-weight: bold; color: #64748b; display:block; margin-bottom:4px;">CITY</label>
+        <input type="text" id="authCity" class="input-field" placeholder="Enter city name">
+      </div>
+
+      <label style="font-size: 11px; font-weight: bold; color: #64748b; display:block; margin-bottom:4px;">EMAIL</label>
+      <input type="email" id="authEmail" class="input-field" placeholder="Enter your email">
+      
+      <label style="font-size: 11px; font-weight: bold; color: #64748b; display:block; margin-bottom:4px;">PASSWORD</label>
+      <input type="password" id="authPassword" class="input-field" placeholder="••••••••">
+
+      <!-- Re-type Password (Visible only on Sign Up) -->
+      <div id="retypePassField" style="display: none;">
+        <label style="font-size: 11px; font-weight: bold; color: #64748b; display:block; margin-bottom:4px;">RE-TYPE PASSWORD</label>
+        <input type="password" id="authConfirmPassword" class="input-field" placeholder="••••••••">
+      </div>
+      
+      <button id="btnLogin" class="btn-orange" style="background: #d97706; margin-top: 10px;">Sign in &rarr;</button>
+    </div>
+
+    <p style="font-size: 13px; color: #64748b;">
+      <span id="toggleText">Don't have an account?</span> 
+      <a href="javascript:void(0)" id="btnToggleAuth" style="color: #0f172a; font-weight: bold; text-decoration: underline; cursor: pointer;">Sign up</a>
+    </p>
+    <p id="authMsg" style="color: #ef4444; font-size: 13px; font-weight: bold; margin-top: 10px;"></p>
+  </div>
+
+  <!-- 2. SADAPAY DEPOSIT SCREEN (3 Input Fields Only) -->
+  <div id="depositScreen" style="max-width: 380px; margin: 40px auto; padding: 0 15px; display: none;">
+    <div class="card">
+      <h3 style="margin-top:0; color:var(--text-dark); text-align:center;">SadaPay Deposit</h3>
+      <div style="background: #fff7ed; border: 1px solid #ffedd5; padding: 12px; border-radius: 12px; margin-bottom: 15px; font-size: 13px; color: #9a3412;">
+        <p style="margin:2px 0;"><strong>Bank:</strong> SadaPay</p>
+        <p style="margin:2px 0;"><strong>Official No:</strong> 03001234567</p>
+      </div>
+
+      <!-- 3 INPUT BOXES -->
+      <label style="font-size: 11px; font-weight: bold; color: #64748b;">ACCOUNT HOLDER NAME</label>
+      <input type="text" id="depName" class="input-field" placeholder="Enter Account Holder Name" oninput="validateDepositForm()">
+
+      <label style="font-size: 11px; font-weight: bold; color: #64748b;">ACCOUNT NUMBER</label>
+      <input type="text" id="depNumber" class="input-field" placeholder="Enter Sender Account Number" oninput="validateDepositForm()">
+
+      <label style="font-size: 11px; font-weight: bold; color: #64748b;">TRANSACTION ID (TRX ID)</label>
+      <input type="text" id="depTrx" class="input-field" placeholder="Enter Transaction ID" oninput="validateDepositForm()">
+
+      <!-- PROCEED BUTTON (Initially Disabled) -->
+      <button id="btnProceed" class="btn-orange" disabled onclick="submitDeposit()">Proceed &rarr;</button>
+    </div>
+  </div>
+
+  <!-- 3. PENDING APPROVAL SCREEN (With Loading Indicator) -->
+  <div id="pendingScreen" style="max-width: 380px; margin: 60px auto; text-align: center; padding: 0 15px; display: none;">
+    <div class="card" style="padding: 30px 20px;">
+      <div class="spinner"></div>
+      <h3 style="color: var(--primary-orange); margin-top: 10px;">Approval Pending</h3>
+      <p style="font-size: 14px; color: #475569; line-height: 1.5; margin-top: 10px;">
+        Approving by admin takes <strong>5 to 30 minutes</strong>.
+      </p>
+      <p style="font-size: 12px; color: #94a3b8; margin-top: 15px;">Your dashboard will unlock automatically once verified.</p>
+    </div>
+  </div>
+
+  <!-- 4. MAIN DASHBOARD (تصاوير 2, 3, 4, 5 والا فلو) -->
+  <div id="mainApp" style="max-width: 420px; margin: 0 auto; padding-bottom: 80px; display: none;">
+    
+    <!-- BALANCE CARD -->
+    <div class="card" style="margin: 15px; text-align: center; border-radius: 24px;">
+      <h3 id="userNameDisplay" style="margin:0 0 10px 0; font-size:18px;">Hamza Awan</h3>
+      <span style="background: #fff7ed; color: #c2410c; padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 0.5px;">AVAILABLE BALANCE</span>
+      <h1 id="userBalance" style="font-size: 40px; margin: 10px 0; color: #c2410c; font-weight: 800;">$0.059</h1>
+      
+      <div style="display:flex; justify-content:space-around; margin: 15px 0 10px 0; font-size:13px; border-top:1px solid #f1f5f9; padding-top:10px;">
+        <div><span style="color:#94a3b8; font-size:11px; display:block;">LEVEL</span><strong>0</strong></div>
+        <div><span style="color:#94a3b8; font-size:11px; display:block;">WITHDRAWN</span><strong>$0.585</strong></div>
+      </div>
+      
+      <button class="btn-orange" onclick="switchTab('wallet')">Withdraw Funds &rarr;</button>
+    </div>
+
+    <!-- TAB 1: HOME -->
+    <div id="tabHome" class="tab-content" style="padding: 0 15px;">
+      <div class="card">
+        <h4 style="margin-top:0;">Quick Actions</h4>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <button class="btn-orange" style="background:#0284c7; font-size:13px;" onclick="switchTab('tasks')">📝 Daily Tasks</button>
+          <button class="btn-orange" style="background:#059669; font-size:13px;" onclick="switchTab('wallet')">👛 Wallet</button>
+        </div>
+
+    <!-- INVITE FRIENDS BANNER (Ab yeh alag card ban kar yahan aayega) -->
+    <div class="card" style="background: #ffffff; border: 2px solid #fde047; border-radius: 20px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px;">
+      <div style="background: #fef08a; width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">👥</div>
+      <div style="flex-grow: 1; margin-left: 15px;">
+        <h4 style="margin: 0; color: #713f12; font-size: 16px;">Invite Friends</h4>
+        <p style="margin: 2px 0 0 0; color: #a16207; font-size: 12px;">Rewards | Salary | Commission</p>
+        <p style="margin: 4px 0 0 0; color: #15803d; font-size: 11px; font-weight: bold;" id="referralCountText">Referrals: 0 Members Added</p>
+      </div>
+      <button onclick="copyReferralLink()" style="background: #fef08a; border: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;" title="Copy Referral Link">📋</button>
+    </div>
+    <!-- TAB: WORKING TASKS SECTION -->
+    <div id="tabTasks" class="tab-content" style="padding: 0 15px; display:none;">
+      <div class="card">
+        <h4 style="margin-top:0;">Copy & Paste Task</h4>
+        <p style="font-size:12px; color:#64748b;">Copy the 10 words below and paste them exactly into the box ($0.003 / Task).</p>
+        
+        <div style="background:#f8fafc; border:1px dashed #cbd5e1; padding:12px; border-radius:10px; font-weight:bold; letter-spacing:0.5px; margin-bottom:12px; font-size:13px; text-align:center; user-select:all;" id="taskWords">
+          Apple Banana Orange Grape Mango Lemon Peach Cherry Berry Melon
+        </div>
+        
+        <input type="text" id="taskInput" class="input-field" placeholder="Paste the 10 words here...">
+        <button id="btnSubmitTask" class="btn-orange" onclick="handleTaskSubmit()">Submit Task</button>
+        <p id="taskMsg" style="font-size:13px; font-weight:bold; margin-top:10px; text-align:center;"></p>
+      </div>
+    </div>
+
+    <!-- TAB 2: STATS -->
+    <div id="tabStats" class="tab-content" style="padding: 0 15px; display:none;">
+      <div class="card">
+        <h4 style="margin-top:0;">Analytics</h4>
+        <p style="font-size:14px;">Completed Tasks: <strong id="completedTasksCount">0</strong> / 3</p>
+        <p style="font-size:14px;">Today's Task Earnings: <strong id="taskEarnings">$0.000</strong></p>
+      </div>
+    </div>
+
+    <!-- TAB 3: WALLET -->
+    <div id="tabWallet" class="tab-content" style="padding: 0 15px; display:none;">
+      <div class="card">
+        <h4 style="margin-top:0;">Withdraw Funds</h4>
+        <label style="font-size: 11px; font-weight:bold; color:#64748b;">PAYMENT METHOD</label>
+        <select id="withdrawMethod" class="input-field" style="margin-top:4px;">
+          <option value="Easypaisa">Easypaisa</option>
+          <option value="Jazzcash">Jazzcash</option>
+          <option value="UPaisa">UPaisa</option>
+          <option value="SadaPay">SadaPay</option>
+        </select>
+        
+        <input type="text" id="withdrawAccount" class="input-field" placeholder="Account Number">
+        <input type="number" id="withdrawAmount" class="input-field" placeholder="Amount in USD ($)">
+        <button class="btn-orange" onclick="handleWithdraw()">Request Withdrawal</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: PROFILE -->
+    <div id="tabProfile" class="tab-content" style="padding: 0 15px; display:none;">
+      <div class="card">
+        <h4 style="margin-top:0;">Edit Profile</h4>
+        <label style="font-size:11px; font-weight:bold; color:#64748b;">FULL NAME</label>
+        <input type="text" id="profName" class="input-field" value="Hamza Awan">
+        <label style="font-size:11px; font-weight:bold; color:#64748b;">EMAIL</label>
+        <input type="email" id="profEmail" class="input-field" disabled>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="switchTab('home')"><span class="icon">🏠</span>Home</div>
+      <div class="nav-item" onclick="switchTab('stats')"><span class="icon">📊</span>Stats</div>
+      <div class="nav-item" onclick="switchTab('wallet')"><span class="icon">👛</span>Wallet</div>
+      <div class="nav-item" onclick="switchTab('profile')"><span class="icon">👤</span>Profile</div>
+      <div class="nav-item" onclick="logout()"><span class="icon">🚪</span>Exit</div>
+    </div>
+
+  </div>
+
+  <script src="scripts/index-374a0185.js"></script>
+</body>
+</html>
