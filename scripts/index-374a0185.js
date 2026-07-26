@@ -134,17 +134,6 @@
           <button class="btn-orange" style="background:#059669; font-size:13px;" onclick="switchTab('wallet')">👛 Wallet</button>
         </div>
       </div>
-
-      <!-- INVITE FRIENDS BANNER -->
-      <div class="card" style="background: #ffffff; border: 2px solid #fde047; border-radius: 20px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px;">
-        <div style="background: #fef08a; width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">👥</div>
-        <div style="flex-grow: 1; margin-left: 15px;">
-          <h4 style="margin: 0; color: #713f12; font-size: 16px;">Invite Friends</h4>
-          <p style="margin: 2px 0 0 0; color: #a16207; font-size: 12px;">Rewards | Salary | Commission</p>
-          <p style="margin: 4px 0 0 0; color: #15803d; font-size: 11px; font-weight: bold;" id="referralCountText">Referrals: 0 Members Added</p>
-        </div>
-        <button onclick="copyReferralLink()" style="background: #fef08a; border: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;" title="Copy Referral Link">📋</button>
-      </div>
     </div>
 
     <!-- TAB: WORKING TASKS SECTION -->
