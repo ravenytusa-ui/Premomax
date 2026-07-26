@@ -9,6 +9,7 @@ if (typeof supabase !== 'undefined') {
 let currentUser = null;
 let currentBalance = 0.059;
 let taskCount = 0;
+let isSignUpMode = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!supabaseClient) return;
@@ -19,8 +20,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     checkStatus();
   }
 
+  // Sign In / Sign Up Button
   const btnLogin = document.getElementById('btnLogin');
   if (btnLogin) btnLogin.addEventListener('click', handleAuth);
+
+  // Toggle Toggle Form Mode
+  const btnToggleAuth = document.getElementById('btnToggleAuth');
+  if (btnToggleAuth) {
+    btnToggleAuth.addEventListener('click', (e) => {
+      e.preventDefault();
+      isSignUpMode = !isSignUpMode;
+
+      const heading = document.getElementById('authHeading');
+      const subheading = document.getElementById('authSubheading');
+      const btn = document.getElementById('btnLogin');
+      const toggleText = document.getElementById('toggleText');
+      const toggleBtn = document.getElementById('btnToggleAuth');
+      const signupFields = document.getElementById('signupFields');
+      const retypeField = document.getElementById('retypePassField');
+      const msg = document.getElementById('authMsg');
+
+      msg.innerText = "";
+
+      if (isSignUpMode) {
+        heading.innerText = "Create Account";
+        subheading.innerText = "Fill in your details to get started";
+        btn.innerText = "Sign up →";
+        toggleText.innerText = "Already have an account?";
+        toggleBtn.innerText = "Sign in";
+        signupFields.style.display = "block";
+        retypeField.style.display = "block";
+      } else {
+        heading.innerText = "Welcome back";
+        subheading.innerText = "Sign in to continue";
+        btn.innerText = "Sign in →";
+        toggleText.innerText = "Don't have an account?";
+        toggleBtn.innerText = "Sign up";
+        signupFields.style.display = "none";
+        retypeField.style.display = "none";
+      }
+    });
+  }
 });
 
 // VALIDATE 3 DEPOSIT INPUT FIELDS
@@ -56,29 +96,77 @@ async function submitDeposit() {
   if (!error) {
     document.getElementById('depositScreen').style.display = 'none';
     document.getElementById('pendingScreen').style.display = 'block';
+  } else {
+    alert("Error: " + error.message);
   }
 }
 
 // AUTH HANDLER
 async function handleAuth() {
-  const email = document.getElementById('authEmail').value;
-  const password = document.getElementById('authPassword').value;
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value.trim();
   const msg = document.getElementById('authMsg');
-  
-  msg.innerText = "Processing...";
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  
-  if (error) {
-    const signup = await supabaseClient.auth.signUp({ email, password });
-    if (signup.error) {
-      msg.innerText = signup.error.message;
+
+  if (!email || !password) {
+    msg.innerText = "Please enter both email and password.";
+    return;
+  }
+
+  if (isSignUpMode) {
+    const fullName = document.getElementById('authName').value.trim();
+    const phone = document.getElementById('authPhone').value.trim();
+    const city = document.getElementById('authCity').value.trim();
+    const confirmPass = document.getElementById('authConfirmPassword').value.trim();
+
+    if (!fullName || !phone || !city) {
+      msg.innerText = "Please fill in all the details.";
+      return;
+    }
+
+    if (password !== confirmPass) {
+      msg.innerText = "Passwords do not match!";
+      return;
+    }
+
+    msg.style.color = "#d97706";
+    msg.innerText = "Creating account...";
+
+    // Sign Up user with additional metadata (Name, Phone, City)
+    const { data, error } = await supabaseClient.auth.signUp({ 
+      email, 
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          phone_number: phone,
+          city: city
+        }
+      }
+    });
+
+    if (error) {
+      msg.style.color = "#ef4444";
+      msg.innerText = error.message;
     } else {
-      currentUser = signup.data.user;
+      currentUser = data.user;
+      msg.style.color = "#10b981";
+      msg.innerText = "Account created successfully!";
       checkStatus();
     }
+
   } else {
-    currentUser = data.user;
-    checkStatus();
+    // SIGN IN LOGIC
+    msg.style.color = "#d97706";
+    msg.innerText = "Signing in...";
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) {
+      msg.style.color = "#ef4444";
+      msg.innerText = error.message;
+    } else {
+      currentUser = data.user;
+      checkStatus();
+    }
   }
 }
 
@@ -86,6 +174,11 @@ async function handleAuth() {
 async function checkStatus() {
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('profEmail').value = currentUser.email;
+
+  if (currentUser.user_metadata && currentUser.user_metadata.full_name) {
+    document.getElementById('userNameDisplay').innerText = currentUser.user_metadata.full_name;
+    document.getElementById('profName').value = currentUser.user_metadata.full_name;
+  }
 
   const { data: deposits } = await supabaseClient
     .from('deposits')
@@ -117,7 +210,7 @@ function switchTab(tabName) {
   if (activeTab) activeTab.style.display = 'block';
 }
 
-// TASK LOGIC ($0.003 x 3 = $0.009)
+// TASK LOGIC
 function handleTaskSubmit() {
   const targetWords = "Apple Banana Orange Grape Mango Lemon Peach Cherry Berry Melon";
   const input = document.getElementById('taskInput').value.trim();
