@@ -191,10 +191,40 @@ async function checkStatus() {
     if (approved) {
       document.getElementById('pendingScreen').style.display = 'none';
       document.getElementById('mainApp').style.display = 'block';
+      checkReferrals();
+
     } else {
       document.getElementById('pendingScreen').style.display = 'block';
     }
+  }// COPY REFERRAL LINK FUNCTION
+function copyReferralLink() {
+  if (!currentUser) return;
+  const refLink = window.location.origin + window.location.pathname + "?ref=" + encodeURIComponent(currentUser.email);
+  
+  navigator.clipboard.writeText(refLink).then(() => {
+    alert("Referral link copied to clipboard!");
+  }).catch(err => {
+    alert("Failed to copy link.");
+  });
+}
+
+// CHECK REFERRAL COUNT
+async function checkReferrals() {
+  if (!currentUser) return;
+
+  const { data } = await supabaseClient
+    .from('referrals')
+    .select('*')
+    .eq('referrer_email', currentUser.email);
+
+  if (data) {
+    const count = data.length;
+    const refText = document.getElementById('referralCountText');
+    if (refText) {
+      refText.innerText = `Referrals: ${count} Member${count === 1 ? '' : 's'} Added`;
+    }
   }
+}
 }
 
 // TAB NAVIGATION
