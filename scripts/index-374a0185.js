@@ -236,8 +236,8 @@ function handleTaskSubmit() {
   }
 }
 
-// WITHDRAW LOGIC (With $0.50 Minimum Limit)
-function handleWithdraw() {
+// WITHDRAW LOGIC (Saves to Supabase & Checks $0.50 Limit)
+async function handleWithdraw() {
   const method = document.getElementById('withdrawMethod').value;
   const acc = document.getElementById('withdrawAccount').value;
   const amount = parseFloat(document.getElementById('withdrawAmount').value);
@@ -247,7 +247,7 @@ function handleWithdraw() {
     return;
   }
 
-  // Minimum limit check
+  // Minimum limit check ($0.50)
   if (amount < 0.50) {
     alert("Minimum withdrawal limit is $0.50!");
     return;
@@ -255,10 +255,30 @@ function handleWithdraw() {
 
   if (amount > currentBalance) {
     alert("Insufficient balance!");
+    return;
+  }
+
+  // Save withdrawal request to Supabase
+  const { error } = await supabaseClient
+    .from('withdrawals')
+    .insert([{
+      user_email: currentUser.email,
+      method: method,
+      account_number: acc,
+      amount: amount,
+      status: 'Pending'
+    }]);
+
+  if (error) {
+    alert("Error: " + error.message);
   } else {
     currentBalance -= amount;
     document.getElementById('userBalance').innerText = "$" + currentBalance.toFixed(3);
-    alert(`Withdrawal request of $${amount} via ${method} submitted!`);
+    alert(`Withdrawal request of $${amount} via ${method} submitted successfully!`);
+    
+    // Clear inputs
+    document.getElementById('withdrawAccount').value = "";
+    document.getElementById('withdrawAmount').value = "";
   }
 }
 
