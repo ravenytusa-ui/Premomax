@@ -317,6 +317,10 @@ async function handleWithdraw() {
     document.getElementById('withdrawAccount').value = "";
     document.getElementById('withdrawAmount').value = "";
   }
+}}
+  }
+}
+  }
 }
 
 // LOGOUT
