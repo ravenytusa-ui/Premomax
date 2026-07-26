@@ -196,18 +196,25 @@ async function checkStatus() {
     } else {
       document.getElementById('pendingScreen').style.display = 'block';
     }
-  }// COPY REFERRAL LINK FUNCTION
+ // COPY REFERRAL LINK FUNCTION (Fallback Method)
 function copyReferralLink() {
-  if (!currentUser) return;
+  if (!currentUser) {
+    alert("Please login first!");
+    return;
+  }
+  
   const refLink = window.location.origin + window.location.pathname + "?ref=" + encodeURIComponent(currentUser.email);
   
-  navigator.clipboard.writeText(refLink).then(() => {
-    alert("Referral link copied to clipboard!");
-  }).catch(err => {
-    alert("Failed to copy link.");
-  });
+  // Temporary input element banatay hain taake copy 100% kaam kare
+  const tempInput = document.createElement("input");
+  tempInput.value = refLink;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempInput);
+  
+  alert("Referral link copied successfully!");
 }
-
 // CHECK REFERRAL COUNT
 async function checkReferrals() {
   if (!currentUser) return;
